@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOD To-Do</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:20px;max-width:700px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px;color:#d4a853}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
+h2{font-size:15px;color:#d4a853;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid #2d3f52;text-transform:uppercase;letter-spacing:1px}
+.task{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:6px;transition:background .15s}
+.task:hover{background:#243042}
+.task input[type=checkbox]{margin-top:3px;width:16px;height:16px;accent-color:#d4a853;cursor:pointer;flex-shrink:0}
+.task label{cursor:pointer;line-height:1.5;font-size:14px;flex:1}
+.checked label{text-decoration:line-through;color:#64748b}
+.checked .time{color:#475569}
+.time{font-size:11px;color:#64748b;flex-shrink:0;margin-top:2px}
+.actions{text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #2d3f52}
+.actions button{background:0;border:1px solid #2d3f52;color:#94a3b8;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px}
+.actions button:hover{background:#243042;color:#e2e8f0}
+.count{color:#94a3b8;font-size:13px;text-align:center;margin-bottom:4px}
+</style>
+</head>
+<body>
+<h1>NOD To-Do</h1>
+<p class="sub" id="date">Today</p>
+<div id="app"></div>
+<div class="actions">
+<button onclick="clearDone()">Clear checked</button>
+</div>
+
+<script>
+const DATA = [
+{text:"Fix ingleside listing photo on ShowMojo",time:"7a",grp:"Morning"},
+{text:"Stop living as a participant in others' dreams",time:"6:45a",grp:"Morning"},
+{text:"Sal MLS",time:"6:45a",grp:"Morning"},
+{text:"Confirm 9am showing",time:"7a",grp:"Morning"},
+{text:"Email 3112 W Monroe St Unit G",time:"7a",grp:"Morning"},
+{text:"Rental CMA",time:"7:30a",grp:"Morning"},
+{text:"Call Golf Tenant?",time:"7:30a",grp:"Morning"},
+{text:"Lease for Zuhrr",time:"7:30a",grp:"Morning"},
+{text:"Call Zia about tenants at T...",time:"8a",grp:"Morning"},
+{text:"Webster keys",time:"8a",grp:"Morning"},
+{text:"Check on Racine 3F",time:"8:30a",grp:"Morning"},
+{text:"Lease for Zuheir's Tenant Wilton",time:"9a",grp:"Morning"},
+{text:"Montana",time:"9:30a",grp:"Morning"},
+{text:"Showing Confirmed — Wilton",time:"10a",grp:"Morning"},
+{text:"Post office",time:"10:30a",grp:"Morning"},
+{text:"California Terrace roof",time:"11:30a",grp:"Morning"},
+{text:"DFS IL weekly meeting",time:"12:25p",grp:"Afternoon"},
+{text:"Visit Greenbay & Michigan property",time:"2:30p",grp:"Afternoon"},
+{text:"Check on Michigan lockbox, cut it",time:"3:15p",grp:"Afternoon"},
+{text:"Visit property for Ken Southside",time:"3:30p",grp:"Afternoon"},
+{text:"Maybe Washington",time:"5p",grp:"Afternoon"},
+{text:"Meet",time:"",grp:"Afternoon"}
+];
+
+const KEY = 'nod_todo';
+const groups = {Morning:[]};
+DATA.forEach(t => { if(!groups[t.grp]) groups[t.grp]=[]; groups[t.grp].push(t); });
+
+let state;
+try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!state||!Array.isArray(state))state=DATA.map(t=>({text:t.text,done:false}));
+
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+
+function render(){
+  document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const total = state.length, done = state.filter(s=>s.done).length;
+  let html = `<p class="count">${done}/${total} done</p>`;
+  Object.entries(groups).forEach(([grp,tasks])=>{
+    html += `<h2>${grp}</h2>`;
+    tasks.forEach(t=>{
+      const s = state.find(s=>s.text===t.text);
+      if(!s)return;
+      html += `<div class="task${s.done?' checked':''}">
+        <input type="checkbox" ${s.done?'checked':''} data-key="${t.text}" onchange="toggle(this)">
+        <label>${t.text}</label>
+        <span class="time">${t.time||''}</span>
+      </div>`;
+    });
+  });
+  document.getElementById('app').innerHTML = html;
+}
+
+function toggle(el){
+  const s = state.find(s=>s.text===el.dataset.key);
+  if(s){s.done=el.checked;save();render()}
+}
+
+function clearDone(){
+  state.forEach(s=>s.done=false);
+  save();render();
+}
+
+render();
+</script>
+</body>
+</html>
