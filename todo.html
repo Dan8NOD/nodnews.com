@@ -10,7 +10,8 @@ body{background:#1a1a2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFo
 h1{font-size:24px;margin-bottom:4px;color:#d4a853}
 .sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
 .sub a{color:#94a3b8;text-decoration:none;border-bottom:1px solid #2d3f52}
-h2{font-size:15px;color:#d4a853;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid #2d3f52;text-transform:uppercase;letter-spacing:1px}
+h2{font-size:15px;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #2d3f52;text-transform:uppercase;letter-spacing:1px}
+h2:first-of-type{margin-top:0}
 .task{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:6px;transition:background .15s}
 .task:hover{background:#243042}
 .task input[type=checkbox]{margin-top:3px;width:16px;height:16px;accent-color:#d4a853;cursor:pointer;flex-shrink:0}
@@ -21,114 +22,48 @@ h2{font-size:15px;color:#d4a853;margin:24px 0 10px;padding-bottom:6px;border-bot
 .actions{text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #2d3f52}
 .actions button{background:0;border:1px solid #2d3f52;color:#94a3b8;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px}
 .actions button:hover{background:#243042;color:#e2e8f0}
-.count{color:#94a3b8;font-size:13px;text-align:center;margin-bottom:4px}
+.day-count{color:#94a3b8;font-size:13px;margin-bottom:8px}
 </style>
 </head>
 <body>
 <h1>NODNEWS</h1>
-<p class="sub">Friday, July 03 — <a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></p>
-<div id="app">
-<p class="count">0/0 done</p>
-<h2>Morning</h2>
-<div class="task">
-  <input type="checkbox" data-key="Call Honore tenant " onchange="toggle(this)">
-  <label>Call Honore tenant </label>
-  <span class="time">8:00am</span>
+<p class="sub"><a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></p>
+<div class="day-section">
+  <h2 style="color:#d4a853;text-transform:uppercase;letter-spacing:1px;font-size:15px;margin-bottom:4px">Today &mdash; Thursday, July 02</h2>
+  <div id="app-today"></div>
 </div>
-<div class="task">
-  <input type="checkbox" data-key="Dentist for Invisalign" onchange="toggle(this)">
-  <label>Dentist for Invisalign</label>
-  <span class="time">11:00am</span>
-</div>
-<h2>Afternoon</h2>
-<div class="task">
-  <input type="checkbox" data-key="Vanessa Condo" onchange="toggle(this)">
-  <label>Vanessa Condo</label>
-  <span class="time">2:00pm</span>
-</div>
-<h2>Showings</h2>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 4833 Montana - 1, Chicago, IL (Sunday Adesola)" onchange="toggle(this)">
-  <label>Showing at 4833 Montana - 1, Chicago, IL (Sunday Adesola)</label>
-  <span class="time">9:00am</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 4833 Montana - 1, Chicago, IL (Samantha Sparacino)" onchange="toggle(this)">
-  <label>Showing at 4833 Montana - 1, Chicago, IL (Samantha Sparacino)</label>
-  <span class="time">9:30am</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 4833 Montana - 1, Chicago, IL (Marco pesce)" onchange="toggle(this)">
-  <label>Showing at 4833 Montana - 1, Chicago, IL (Marco pesce)</label>
-  <span class="time">9:30am</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 4833 Montana - 1, Chicago, IL (Luis Ocasio)" onchange="toggle(this)">
-  <label>Showing at 4833 Montana - 1, Chicago, IL (Luis Ocasio)</label>
-  <span class="time">10:00am</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 4833 Montana - 1, Chicago, IL (Bianca Cardona)" onchange="toggle(this)">
-  <label>Showing at 4833 Montana - 1, Chicago, IL (Bianca Cardona)</label>
-  <span class="time">10:00am</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Lois Gonzalez)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Lois Gonzalez)</label>
-  <span class="time">12:30pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Tracy Dulay)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Tracy Dulay)</label>
-  <span class="time">12:30pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Maria Castillo)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Maria Castillo)</label>
-  <span class="time">12:30pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Juliana Fildisis)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Juliana Fildisis)</label>
-  <span class="time">1:00pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing Confirmed" onchange="toggle(this)">
-  <label>Showing Confirmed</label>
-  <span class="time">2:00pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Monique Carr)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Monique Carr)</label>
-  <span class="time">3:00pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Juliana Fildisis)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Juliana Fildisis)</label>
-  <span class="time">3:00pm</span>
-</div>
-<div class="task">
-  <input type="checkbox" data-key="Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Ayesha Grayer)" onchange="toggle(this)">
-  <label>Showing at 9654 Golf Terrace unit 1W Des Plaines - 1, Chicago, IL (Ayesha Grayer)</label>
-  <span class="time">3:30pm</span>
-</div>
-<h2>Other</h2>
-<div class="task">
-  <input type="checkbox" data-key="website for marketablity scorecard" onchange="toggle(this)">
-  <label>website for marketablity scorecard</label>
-  <span class="time">8:15pm</span>
-</div>
-
+<div style="height:1px;background:#2d3f52;margin:32px 0"></div>
+<div class="day-section">
+  <h2 style="color:#d4a853;text-transform:uppercase;letter-spacing:1px;font-size:15px;margin-bottom:4px">Tomorrow &mdash; Friday, July 03</h2>
+  <div id="app-tomorrow"></div>
 </div>
 <div class="actions"><button onclick="clearDone()">Clear checked</button></div>
 <script>
-const DATA = [];
 const KEY = "nod_todo";
 let state;
-try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-function render(){}
-function toggle(el){}
-function clearDone(){}
+try{state=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){state=[]}
+
+function render(){
+  document.querySelectorAll(".task").forEach(el=>{
+    const cb = el.querySelector("input");
+    if(!cb) return;
+    const s = state.find(s=>s.text===cb.dataset.key);
+    if(s){ cb.checked = s.done; if(s.done) el.classList.add("checked") }
+    else state.push({text:cb.dataset.key,done:false});
+    cb.addEventListener("change", function(){
+      const s = state.find(s=>s.text===this.dataset.key);
+      if(s){ s.done = this.checked; if(this.checked) el.classList.add("checked"); else el.classList.remove("checked") }
+      localStorage.setItem(KEY,JSON.stringify(state));
+    });
+  });
+}
+
+function clearDone(){
+  state.forEach(s=>s.done=false);
+  localStorage.setItem(KEY,JSON.stringify(state));
+  location.reload();
+}
+render();
 </script>
 </body>
 </html>
