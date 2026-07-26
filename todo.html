@@ -5,61 +5,375 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gadget Designer — NODNEWS</title>
 <style>
+/* ─── Reset & Base ─────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#1a1a2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:20px;max-width:700px;margin:0 auto}
-h1{font-size:24px;margin-bottom:4px;color:#d4a853}
-.sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
-.sub a{color:#94a3b8;text-decoration:none;border-bottom:1px solid #2d3f52}
-h2{font-size:15px;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid #2d3f52;text-transform:uppercase;letter-spacing:1px}
-h2:first-of-type{margin-top:0}
-.task{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:6px;transition:background .15s}
-.task:hover{background:#243042}
-.task input[type=checkbox]{margin-top:3px;width:16px;height:16px;accent-color:#d4a853;cursor:pointer;flex-shrink:0}
-.task label{cursor:pointer;line-height:1.5;font-size:14px;flex:1}
-.checked label{text-decoration:line-through;color:#64748b}
-.checked .time{color:#475569}
+
+body{
+  background:#1a1a2e;
+  color:#e2e8f0;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  padding:20px;
+  max-width:700px;
+  margin:0 auto;
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* ─── Ambient Background Glow ──────────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;
+  top:-20%;left:-10%;
+  width:60%;height:60%;
+  background:radial-gradient(ellipse, rgba(212,168,83,.07) 0%, transparent 70%);
+  animation:ambientDrift 12s ease-in-out infinite alternate;
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;
+  bottom:-20%;right:-10%;
+  width:50%;height:50%;
+  background:radial-gradient(ellipse, rgba(99,102,241,.05) 0%, transparent 70%);
+  animation:ambientDrift 16s ease-in-out infinite alternate-reverse;
+  pointer-events:none;
+  z-index:0;
+}
+
+@keyframes ambientDrift{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(4%,4%) scale(1.08)}
+}
+
+/* ─── Page Content Layer ─────────────────────────────────────────── */
+.page-content{position:relative;z-index:1}
+
+/* ─── Hero / Header ────────────────────────────────────────────────── */
+.hero{
+  padding-bottom:14px;
+  animation:fadeInDown .55s cubic-bezier(.22,.68,0,1.2) both;
+}
+h1{
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:.5px;
+  color:#d4a853;
+  margin-bottom:3px;
+  position:relative;
+  display:inline-block;
+}
+/* subtle shimmer on the NODNEWS wordmark */
+h1::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(105deg, transparent 30%, rgba(255,255,255,.18) 50%, transparent 70%);
+  background-size:200% 100%;
+  animation:shimmer 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes shimmer{
+  0%,100%{background-position:200% 0}
+  50%{background-position:-200% 0}
+}
+
+.sub{color:#94a3b8;font-size:13px;margin-bottom:0}
+.sub a{
+  color:#94a3b8;
+  text-decoration:none;
+  border-bottom:1px solid #2d3f52;
+  transition:color .2s,border-color .2s;
+}
+.sub a:hover{color:#d4a853;border-color:#d4a853}
+
+/* ─── Rolling Banner ─────────────────────────────────────────────── */
+.ticker-wrap{
+  position:relative;
+  margin:18px -20px 22px;
+  overflow:hidden;
+  background:linear-gradient(135deg,#12122a 0%,#1e1e3a 50%,#12122a 100%);
+  border-top:1px solid rgba(212,168,83,.25);
+  border-bottom:1px solid rgba(212,168,83,.25);
+  padding:8px 0;
+  box-shadow:0 0 40px rgba(212,168,83,.06) inset, 0 2px 20px rgba(0,0,0,.3);
+  animation:fadeInDown .55s .1s both;
+}
+
+/* left/right fade masks */
+.ticker-wrap::before,
+.ticker-wrap::after{
+  content:'';
+  position:absolute;
+  top:0;bottom:0;width:60px;
+  z-index:2;pointer-events:none;
+}
+.ticker-wrap::before{left:0;background:linear-gradient(to right,#12122a,transparent)}
+.ticker-wrap::after{right:0;background:linear-gradient(to left,#12122a,transparent)}
+
+.ticker-track{
+  display:flex;
+  width:max-content;
+  animation:tickerScroll 32s linear infinite;
+  will-change:transform;
+}
+.ticker-track:hover{animation-play-state:paused}
+
+@keyframes tickerScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+.ticker-item{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:0 28px;
+  font-size:11.5px;
+  font-weight:500;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  color:#94a3b8;
+  white-space:nowrap;
+  transition:color .3s;
+}
+.ticker-item.gold{color:#d4a853}
+.ticker-item.dim{color:#475569}
+
+.ticker-sep{
+  display:inline-block;
+  width:4px;height:4px;
+  border-radius:50%;
+  background:#d4a853;
+  opacity:.45;
+  flex-shrink:0;
+}
+
+/* ─── Section Headers ────────────────────────────────────────────── */
+h2{
+  font-size:13px;
+  margin:0 0 8px;
+  padding-bottom:6px;
+  border-bottom:1px solid #2d3f52;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:#d4a853;
+}
+
+/* ─── Day Sections ────────────────────────────────────────────────── */
+.day-section{
+  animation:fadeInUp .5s cubic-bezier(.22,.68,0,1.1) both;
+}
+.day-section:nth-child(1){animation-delay:.15s}
+.day-section:nth-child(3){animation-delay:.28s}
+
+.section-divider{
+  height:1px;
+  background:linear-gradient(to right,transparent,#2d3f52 20%,#2d3f52 80%,transparent);
+  margin:28px 0;
+  animation:fadeIn .6s .2s both;
+}
+
+/* ─── Tasks ────────────────────────────────────────────────────────────── */
+.task{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:9px 12px;
+  border-radius:7px;
+  transition:background .18s, box-shadow .18s, transform .15s;
+  position:relative;
+  overflow:hidden;
+}
+.task::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;width:2px;
+  background:#d4a853;
+  opacity:0;
+  transition:opacity .2s;
+  border-radius:2px;
+}
+.task:hover{
+  background:#243042;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+  transform:translateX(2px);
+}
+.task:hover::before{opacity:.6}
+
+.task input[type=checkbox]{
+  margin-top:3px;
+  width:16px;height:16px;
+  accent-color:#d4a853;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:transform .15s;
+}
+.task:hover input[type=checkbox]{transform:scale(1.1)}
+
+.task label{
+  cursor:pointer;
+  line-height:1.5;
+  font-size:14px;
+  flex:1;
+  transition:color .2s;
+}
+
+/* checked state */
+.checked label{
+  text-decoration:line-through;
+  color:#475569;
+  text-decoration-color:#3d5068;
+  text-decoration-thickness:1px;
+}
+.checked .time{color:#3d5068}
+.checked{opacity:.7}
+
 .time{font-size:11px;color:#64748b;flex-shrink:0;margin-top:2px}
-.actions{text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #2d3f52}
-.actions button{background:0;border:1px solid #2d3f52;color:#94a3b8;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px}
-.actions button:hover{background:#243042;color:#e2e8f0}
-.day-count{color:#94a3b8;font-size:13px;margin-bottom:8px}
+
+/* ─── Actions ───────────────────────────────────────────────────────── */
+.actions{
+  text-align:center;
+  margin-top:24px;
+  padding-top:16px;
+  border-top:1px solid #2d3f52;
+  animation:fadeIn .5s .35s both;
+}
+.actions button{
+  background:0;
+  border:1px solid #2d3f52;
+  color:#64748b;
+  padding:7px 18px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  transition:background .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+.actions button:hover{
+  background:#243042;
+  color:#d4a853;
+  border-color:rgba(212,168,83,.35);
+  box-shadow:0 0 14px rgba(212,168,83,.08);
+}
+
+/* ─── Keyframes ───────────────────────────────────────────────────────── */
+@keyframes fadeInDown{
+  from{opacity:0;transform:translateY(-14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+/* ─── Reduced-motion: strip all animations ─────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
-<h1>NODNEWS</h1>
-<p class="sub"><a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></p>
+<div class="page-content">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>NODNEWS</h1>
+  <p class="sub"><a href="https://negotiatorsondemand.com">negotiatorsondemand.com</a></p>
+</div>
+
+<!-- Rolling Banner -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <!-- items populated by JS for seamless loop -->
+  </div>
+</div>
+
+<!-- Today -->
 <div class="day-section">
-  <h2 style="color:#d4a853;text-transform:uppercase;letter-spacing:1px;font-size:15px;margin-bottom:4px">Today &mdash; Wednesday, July 29</h2>
+  <h2>Today &mdash; <span id="dateToday"></span></h2>
   <div id="app-today"></div>
 </div>
-<div style="height:1px;background:#2d3f52;margin:32px 0"></div>
+
+<div class="section-divider"></div>
+
+<!-- Tomorrow -->
 <div class="day-section">
-  <h2 style="color:#d4a853;text-transform:uppercase;letter-spacing:1px;font-size:15px;margin-bottom:4px">Tomorrow &mdash; Thursday, July 30</h2>
+  <h2>Tomorrow &mdash; <span id="dateTomorrow"></span></h2>
   <div id="app-tomorrow"></div>
 </div>
+
 <div class="actions"><button onclick="clearDone()">Clear checked</button></div>
+</div><!-- /page-content -->
+
 <script>
-const KEY = "nod_todo";
-let state;
+/* ─── Date labels ────────────────────────────────────────────────── */
+(function(){
+  var fmt = function(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); };
+  var now = new Date();
+  var tom = new Date(now); tom.setDate(tom.getDate()+1);
+  document.getElementById('dateToday').textContent = fmt(now);
+  document.getElementById('dateTomorrow').textContent = fmt(tom);
+})();
+
+/* ─── Rolling Banner ─────────────────────────────────────────────── */
+(function(){
+  var items = [
+    {text:'NODNEWS', cls:'gold'},
+    {text:'Negotiate. Close. Win.', cls:''},
+    {text:'NOD Academy', cls:'gold'},
+    {text:'negotiatorsondemand.com', cls:'dim'},
+    {text:'Deals in Motion', cls:''},
+    {text:'Strategic Negotiations', cls:'gold'},
+    {text:'High-Stakes Outcomes', cls:''},
+    {text:'Precision · Leverage · Results', cls:'dim'},
+    {text:'Close with Confidence', cls:'gold'},
+    {text:'Elite Negotiators', cls:''},
+  ];
+
+  function makeItem(item){
+    var span = document.createElement('span');
+    span.className = 'ticker-item' + (item.cls ? ' '+item.cls : '');
+    span.appendChild(document.createTextNode(item.text));
+    var sep = document.createElement('span');
+    sep.className = 'ticker-sep';
+    span.appendChild(sep);
+    return span;
+  }
+
+  var track = document.getElementById('tickerTrack');
+  // render twice for seamless infinite loop
+  [1,2].forEach(function(){ items.forEach(function(item){ track.appendChild(makeItem(item)); }); });
+})();
+
+/* ─── Todo state ───────────────────────────────────────────────────── */
+var KEY = "nod_todo";
+var state;
 try{state=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){state=[]}
 
 function render(){
-  document.querySelectorAll(".task").forEach(el=>{
-    const cb = el.querySelector("input");
+  document.querySelectorAll(".task").forEach(function(el){
+    var cb = el.querySelector("input");
     if(!cb) return;
-    const s = state.find(s=>s.text===cb.dataset.key);
-    if(s){ cb.checked = s.done; if(s.done) el.classList.add("checked") }
+    var s = state.find(function(s){return s.text===cb.dataset.key});
+    if(s){ cb.checked = s.done; if(s.done) el.classList.add("checked"); }
     else state.push({text:cb.dataset.key,done:false});
     cb.addEventListener("change", function(){
-      const s = state.find(s=>s.text===this.dataset.key);
-      if(s){ s.done = this.checked; if(this.checked) el.classList.add("checked"); else el.classList.remove("checked") }
+      var s = state.find(function(s){return s.text===this.dataset.key;}.bind(this));
+      if(s){ s.done = this.checked; if(this.checked) el.classList.add("checked"); else el.classList.remove("checked"); }
       localStorage.setItem(KEY,JSON.stringify(state));
     });
   });
 }
 
 function clearDone(){
-  state.forEach(s=>s.done=false);
+  state.forEach(function(s){s.done=false;});
   localStorage.setItem(KEY,JSON.stringify(state));
   location.reload();
 }
